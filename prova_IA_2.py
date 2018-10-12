@@ -56,17 +56,17 @@ sns.distplot(hist_dataset)
 dataset['class'].value_counts()
 
 from sklearn.utils import resample
-X_majority = dataset[dataset['class'] == 'H']
+X_majority = dataset[dataset['class'] == 'G']
 X_B = dataset[dataset['class'] == 'B']
 X_C = dataset[dataset['class'] == 'C']
 X_D = dataset[dataset['class'] == 'D']
 X_E = dataset[dataset['class'] == 'E']
-X_G = dataset[dataset['class'] == 'G']
+X_W = dataset[dataset['class'] == 'W']
 X_F = dataset[dataset['class'] == 'F']
-X_I = dataset[dataset['class'] == 'I']
+X_A = dataset[dataset['class'] == 'A']
 X_X = dataset[dataset['class'] == 'X']
 X_Y = dataset[dataset['class'] == 'Y']
-X_W = dataset[dataset['class'] == 'W']
+X_I = dataset[dataset['class'] == 'I']
 
 X_majority_upsampled = resample(X_B, 
                                  replace=True,    # sample without replacement
@@ -86,7 +86,7 @@ X_majority_upsampled = pd.concat([X_majority_upsampled,
                                  replace=True,    # sample without replacement
                                  n_samples=len(X_majority),     # to match minority class
                                  random_state=123),# reproducible results
-                                resample(X_G, 
+                                resample(X_W, 
                                  replace=True,    # sample without replacement
                                  n_samples=len(X_majority),     # to match minority class
                                  random_state=123), # reproducible results
@@ -94,7 +94,7 @@ X_majority_upsampled = pd.concat([X_majority_upsampled,
                                  replace=True,    # sample without replacement
                                  n_samples=len(X_majority),     # to match minority class
                                  random_state=123), # reproducible results
-                                resample(X_I, 
+                                resample(X_A, 
                                  replace=True,    # sample without replacement
                                  n_samples=len(X_majority),     # to match minority class
                                  random_state=123), # reproducible results
@@ -106,27 +106,27 @@ X_majority_upsampled = pd.concat([X_majority_upsampled,
                                  replace=True,    # sample without replacement
                                  n_samples=len(X_majority),     # to match minority class
                                  random_state=123), # reproducible results
-                                resample(X_W, 
+                                resample(X_I, 
                                  replace=True,    # sample without replacement
                                  n_samples=len(X_majority),     # to match minority class
                                  random_state=123), # reproducible results
                                 ])
 X_majority_upsampled['class'].value_counts()
                             
-X_majority = dataset[dataset['class'] == 'A']
-X_minority = dataset[dataset['class'] == 'H']
+X_majority = dataset[dataset['class'] == 'H']
+X_minority = dataset[dataset['class'] == 'G']
 
 X_minority_upsampled = resample(X_majority, 
                                  replace=True,    # sample without replacement
                                  n_samples=len(X_minority),     # to match minority class
                                  random_state=123) # reproducible results
 
-X_upsampled = pd.concat([X_majority_upsampled, X_minority_upsampled])
+X_upsampled = pd.concat([X_majority_upsampled, X_minority_upsampled, X_minority])
 
 X_upsampled['class'].value_counts()
 
 
-#HISTOGRAM SEM BALANCEAMENTO
+#HISTOGRAM COM BALANCEAMENTO
 hist_dataset = X_upsampled['class']
 hist_dataset = pd.Categorical(hist_dataset).codes
 sns.distplot(hist_dataset)
@@ -151,16 +151,9 @@ X_test = scaler.transform(X_test)
 
 from sklearn.neural_network import MLPClassifier
 
-clf = MLPClassifier(activation='relu',solver='lbfgs',hidden_layer_sizes=2)
+clf = MLPClassifier(activation='tanh',solver='lbfgs',hidden_layer_sizes=(200,200))
 
 clf.fit(X_train, y_train)
-
-target = clf.predict(X_test)
-
-score = clf.score(X_test,y_test)
-
-print(score)
-
 
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score 
 
