@@ -167,8 +167,5 @@ print('Especificidade:',especificidade)
 
 
 ###############################################################################
-#Y['austim'] = pd.Categorical(Y['austim']).codes
-Y.to_csv('saida',sep='\t')
 
-#GRAFICO DE CORRELAÇAO
-dataset.plot(x='A5_Score',y='result',kind='scatter',color='y')
+
