@@ -43,6 +43,13 @@ dataset = dataset.drop_duplicates(None, 'first')
 
 dataset['austim'].value_counts()
 
+
+#CLASSES DESBALANCEADAS
+hist_dataset = dataset['austim']
+hist_dataset = pd.Categorical(hist_dataset).codes
+sns.distplot(hist_dataset,kde=False,bins=3)
+
+#BALANCEAMENTO DAS CLASSES
 from sklearn.utils import resample
 X_majority = dataset[dataset.austim == 'no']
 X_minority = dataset[dataset.austim == 'yes']
@@ -56,7 +63,13 @@ X_downsampled = pd.concat([X_majority_upsampled, X_majority])
 
 X_downsampled.austim.value_counts()
 
-##discretizacao
+#CLASSES BALANCEADAS
+hist_dataset = X_downsampled['austim']
+hist_dataset = pd.Categorical(hist_dataset).codes
+sns.distplot(hist_dataset,kde=False,bins=3)
+
+
+#DISCRETIZAÇÃO DA DATABASE
 X = X_downsampled
 Y = X.iloc[:,14]
 X = X.drop(['austim'], axis = 1)
@@ -67,8 +80,8 @@ X['jundice'] = pd.Categorical(X['jundice']).codes
 X['contry_of_res'] = pd.Categorical(X['contry_of_res']).codes
 X['Class/ASD'] = pd.Categorical(X['Class/ASD']).codes
 
-#X = X.drop_duplicates(None, 'first')
 
+#MAPA DE CALOR 'CORRELAÇÃO'
 X.corr()
 sns.heatmap(X.corr())
 
@@ -77,38 +90,84 @@ X.drop(['result'],axis=1, inplace=True)
 X.corr()
 sns.heatmap(X.corr())
 
+###############################################################################
 
-#Y.hist(column = 'austim')
+#PRIMEIRO MÉTODO 'KNN'
+print('=================KNN=================')
 from sklearn.cross_validation import train_test_split
 X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.2, random_state=1)
 
-X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.125, random_state=1)
-
-
-from sklearn.preprocessing import StandardScaler  
+from sklearn.preprocessing import StandardScaler
 scaler = StandardScaler()  
 scaler.fit(X_train)
 
 X_train = scaler.transform(X_train)  
 X_test = scaler.transform(X_test)  
 
-from sklearn.neighbors import KNeighborsClassifier  
+from sklearn.neighbors import KNeighborsClassifier 
+ 
 classifier = KNeighborsClassifier(n_neighbors=1)  
+
 classifier.fit(X_train, y_train)  
 
 y_pred = classifier.predict(X_test)  
 
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score  
-print(confusion_matrix(y_test, y_pred))  
-print(classification_report(y_test, y_pred))  
-print(accuracy_score(y_test, y_pred))
 
-from sklearn.metrics import confusion_matrix
+#MATRIZ DE CONFUSÃO
 cm=confusion_matrix(y_test,y_pred)
+print(cm)  
+
+# PRECISÃO//RECALL'SENSIBILIDADE E ESPECIFICIDADE'//F1-SCORE//SUPPORT
+print(classification_report(y_test, y_pred))  
+
+#ACURÁCIA
+print('Acurácia:',accuracy_score(y_test, y_pred))
+
+#sensibilidade
+sensibilidade= cm[0,0]/(cm[0,1]+cm[0,0])
+print('Sensibilidade:',sensibilidade)
+
+#especificidade
+especificidade= cm[1,1]/(cm[1,1]+cm[1,0])
+print('Especificidade:',especificidade)
 
 
 ###############################################################################
-Y['austim'] = pd.Categorical(Y['austim']).codes
+
+#SEGUNDO MÉTODO 'SVM'
+print('=================SVM=================')
+from sklearn import svm
+
+classifier_SVM = svm.SVC(kernel='poly',C=3.0, degree = 6,coef0=0.0)  
+
+classifier_SVM.fit(X_train, y_train)  
+
+y_pred_SVM = classifier_SVM.predict(X_test) 
+
+
+#MATRIZ DE CONFUSÃO
+matriz_de_confusao = confusion_matrix(y_test, y_pred_SVM)
+print(matriz_de_confusao)  
+
+# PRECISÃO//RECALL'SENSIBILIDADE E ESPECIFICIDADE'//F1-SCORE//SUPPORT
+print(classification_report(y_test, y_pred_SVM))  
+
+#ACURÁCIA
+print('Acurácia:',accuracy_score(y_test, y_pred_SVM))
+
+#sensibilidade
+sensibilidade= matriz_de_confusao[0,0]/(matriz_de_confusao[0,1]+matriz_de_confusao[0,0])
+print('Sensibilidade:',sensibilidade)
+
+#especificidade
+especificidade= matriz_de_confusao[1,1]/(matriz_de_confusao[1,1]+matriz_de_confusao[1,0])
+print('Especificidade:',especificidade)
+
+
+
+###############################################################################
+#Y['austim'] = pd.Categorical(Y['austim']).codes
 Y.to_csv('saida',sep='\t')
 
 #GRAFICO DE CORRELAÇAO
