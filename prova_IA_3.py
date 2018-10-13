@@ -51,10 +51,11 @@ sns.distplot(hist_dataset)
 from sklearn.preprocessing import StandardScaler
 scaler = StandardScaler()  
 scaler.fit(X_train)
+scaler.fit(X_test)
 
-X_train = scaler.transform(X_train)  
+#X_train = scaler.transform(X_train)  
 
-X_test = scaler.transform(X_test)  
+#X_test = scaler.transform(X_test)  
 
 '''
 from sklearn.datasets import make_regression
@@ -103,38 +104,54 @@ r2_score(y_test,y_pred)
 
 mean_squared_error(y_test, y_pred)  
 '''
-import math
-def hypo(x,y):
-    return math.hypot(x,y)
-
 
 #KNN
 from sklearn.multioutput import MultiOutputRegressor
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.neural_network import MLPRegressor
+from sklearn.ensemble.gradient_boosting import GradientBoostingRegressor
+from sklearn.linear_model import LinearRegression
+from sklearn import tree
 
+#rgr = MultiOutputRegressor(MLPRegressor(activation='logistic', early_stopping = True, validation_fraction = 0.2 ,solver='adam',hidden_layer_sizes=(300,300,300)))
+#rgr = MultiOutputRegressor(KNeighborsRegressor(n_neighbors=39, p = 1, weights='distance'))
+#rgr = MultiOutputRegressor(LinearRegression(fit_intercept=True, normalize=False, copy_X=True, n_jobs=None))
+rgr = MultiOutputRegressor(tree.DecisionTreeRegressor(criterion = "mse", max_depth = 1))
 
-
-rgr=MultiOutputRegressor(MLPRegressor(activation='relu',solver='adam',hidden_layer_sizes=(200,200)))
 
 rgr.fit(X_train, y_train)
 
 y_pred = rgr.predict(X_test)
 
-
-
 rgr.score(X_train,y_train)
-
-
 
 from sklearn.metrics import r2_score, mean_absolute_error
 
 r2_score(y_test,y_pred)
 
-mean_absolute_error(y_test, y_pred,multioutput='uniform_average') 
-'''
+mean_absolute_error(y_test, y_pred,multioutput='uniform_average')
 
+
+X_train = X_train.as_matrix()
+y_train = y_train.as_matrix()
+
+
+import keras
+from keras.models import Sequential 
+from keras.layers.core import Dense, Activation, Dropout, Flatten
+from keras.layers.recurrent import LSTM
+
+regressor = Sequential()
+regressor.add(LSTM(100))
+regressor.add(Flatten())
+regressor.add(Dense(5))
+regressor.compile(loss = "mean_absolute_error", optimizer = "adam")
+regressor.fit(X_train, y_train, epochs = 100, batch_size =1, verbose = 2)
+
+
+'''
 #############################################
 dataset_train['id']=dataset_train.index + 1
 dataset_train.to_csv('data_train.txt',sep='\t')
+'''
