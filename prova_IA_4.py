@@ -86,10 +86,11 @@ c, coph_dists = cophenet(Z, pdist(X))
 
 
 from scipy.cluster.hierarchy import fcluster
-max_d = 50
+
+max_d = 1/10
 
 #criação de  1300 clusters
-clusters_H = fcluster(Z, max_d, criterion='distance')
+clusters_H = fcluster(Z,max_d, criterion='distance')
 clusters_H
  
 
