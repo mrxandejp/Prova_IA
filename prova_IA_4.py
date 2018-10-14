@@ -13,6 +13,14 @@ X = dataset.iloc[:,0:33]
 
 X.drop(['id'],axis=1, inplace=True)
 
+#NORMALIZAÇÃO
+from sklearn.preprocessing import MinMaxScaler
+
+scaler = MinMaxScaler()
+scaler.fit(X)
+MinMaxScaler(copy=True, feature_range=(0, 1))
+X=scaler.transform(X)
+
 
 from sklearn.cluster import KMeans
 
@@ -30,7 +38,7 @@ from sklearn.cluster import KMeans
 #k=10 ainda com pouca variação, dados super concentrados no cluster 0,
 #clusters 3 e 6, apenas com 1 instancia
 
-kmeans = KMeans(n_clusters = 100, init = 'random')
+kmeans = KMeans(n_clusters = 10, init = 'random')
 #apresenta mais variações, aparentemente nenhum cluster dominando o outro
 
 #Ajustando
