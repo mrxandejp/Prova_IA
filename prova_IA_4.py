@@ -13,6 +13,7 @@ X = dataset.iloc[:,0:33]
 
 X.drop(['id'],axis=1, inplace=True)
 
+
 #NORMALIZAÇÃO
 from sklearn.preprocessing import MinMaxScaler
 
@@ -31,14 +32,14 @@ from sklearn.cluster import KMeans
 #kmeans = KMeans(n_clusters = 2, init = 'k-means++', max_iter=300)
 #k=2 apenas 1 instancia pertencente ao cluster 1
 
-#kmeans = KMeans(n_clusters = 5, init = 'random')
+#kmeans = KMeans(n_clusters = 5, init = 'k-means++')
 #k=5 pouca variação , clusters 1 e 2 apenas com 1 instancia
 
-#kmeans = KMeans(n_clusters = 10, init = 'random')
+#kmeans = KMeans(n_clusters = 10, init = 'k-means++')
 #k=10 ainda com pouca variação, dados super concentrados no cluster 0,
 #clusters 3 e 6, apenas com 1 instancia
 
-kmeans = KMeans(n_clusters = 10, init = 'random')
+kmeans = KMeans(n_clusters = 100, init = 'k-means++')
 #apresenta mais variações, aparentemente nenhum cluster dominando o outro
 
 #Ajustando
@@ -57,8 +58,12 @@ labels = kmeans.labels_
 clusters = kmeans.predict(X)
 
 #tabela com os valores//respectivos clusters
+clusters=clusters.astype(float)
 table_finale = X
-table_finale['cluster'] = clusters
+table_finale['clusters']=clusters
+
+table_finale=pd.concat(clusters,axis=1,ignore_index=True)
+
 
 
 
@@ -95,7 +100,7 @@ clusters_H
  
 
 table_finale_H = X
-table_finale_H['cluster'] = clusters_H
+
 
 
 
