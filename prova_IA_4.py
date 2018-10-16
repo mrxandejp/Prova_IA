@@ -88,7 +88,7 @@ from sklearn.cluster import KMeans
 #init = k-means++ / random / 1ª favorece a convergencia 2º randomico
 #max_iter = quantidade maxima de iteracoes
 
-kmeans = KMeans(n_clusters = 300, init = 'k-means++', max_iter=300)
+kmeans = KMeans(n_clusters = 100, init = 'k-means++', max_iter=300)
 
 
 #Ajustando
@@ -125,7 +125,7 @@ import collections
 Z = linkage(X, 'ward','euclidean')
 
 #criação de  
-clusters_H = cluster.hierarchy.cut_tree(Z, n_clusters=300)
+clusters_H = cluster.hierarchy.cut_tree(Z, n_clusters=100)
 
 
 
