@@ -27,6 +27,11 @@ print(correlacao)
 #COMBINANDO DUAS COLUNAS EM UMA
 dataset['f6_f10']=dataset.f6.combine(dataset.f10, lambda x1, x2: x1 if x1 < x2 else x2)
 
+
+
+#COMBINANDO DUAS COLUNAS EM UMA
+dataset['f6_f10']=dataset.f6.combine(dataset.f10, lambda x1, x2: (x1+x2)/2)
+
 #APAGANDO COLUNAS PREVIAMENTE COMBINADAS
 dataset.drop(['f6'],axis=1, inplace=True)
 dataset.drop(['f10'],axis=1, inplace=True)
