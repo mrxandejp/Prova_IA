@@ -164,8 +164,9 @@ sns.distplot(hist_clusters_hier)
 
 
 ###############################################################################
-qtd_por_clusters_hier['id']=qtd_por_clusters_hier.index + 1
-qtd_por_clusters_hier.to_csv('NORM_new_csv4.txt',sep='\t')
+
+#qtd_por_clusters_hier['id']=qtd_por_clusters_hier.index + 1
+qtd_por_clusters_hier.to_csv('NO_NORM_new_csv4.txt',sep='\t')
 
 
 
