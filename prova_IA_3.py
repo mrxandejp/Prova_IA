@@ -10,6 +10,15 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+from sklearn.multioutput import MultiOutputRegressor
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.neighbors import KNeighborsRegressor
+from sklearn.neural_network import MLPRegressor
+from sklearn.ensemble.gradient_boosting import GradientBoostingRegressor
+from sklearn.linear_model import LinearRegression
+from sklearn import tree
+from sklearn.metrics import r2_score, mean_absolute_error
+import math
 #IMPORTANDO DATABASE
 
 dataset_train = pd.read_csv('base_treinamento.csv')
@@ -57,23 +66,12 @@ scaler.fit(X_test)
 
 #X_test = scaler.transform(X_test)  
 
-'''
-from sklearn.datasets import make_regression
-from sklearn.multioutput import MultiOutputRegressor
-from sklearn.ensemble import GradientBoostingRegressor
-
-X_train, y_train = make_regression(n_samples=10, n_targets=3, random_state=1)
-
-MultiOutputRegressor(GradientBoostingRegressor(random_state=0)).fit(X_train, y_train).predict(X_test)
-
-'''
-
 
 '''
 #KNN
 from sklearn.neighbors import KNeighborsRegressor
 
-neigh = KNeighborsRegressor(n_neighbors=5)
+neigh = KNeighborsRegressor(n_neighbors=3,algorithm='auto',weights='distance',p=2)
 
 neigh.fit(X_train, y_train) 
 
@@ -84,70 +82,20 @@ from sklearn.metrics import r2_score, mean_squared_error
 
 r2_score(y_test,y_pred)
 
-mean_squared_error(y_test, y_pred) 
-'''
-
-
+mean_absolute_error(y_test, y_pred)  
 
 '''
+
 from sklearn.neural_network import MLPRegressor
 
-clf = MLPRegressor(activation='relu',solver='adam',hidden_layer_sizes=(200,200,200,200))
-
+clf = MLPRegressor(activation='relu',solver='adam',hidden_layer_sizes=(200,200),beta_1=0.7)
+               
 clf.fit(X_train, y_train)
-
-from sklearn.metrics import r2_score, mean_squared_error
 
 y_pred=clf.predict(X_test)
 
-r2_score(y_test,y_pred)
+mean_absolute_error(y_test, y_pred)
 
-mean_squared_error(y_test, y_pred)  
-'''
-
-#KNN
-from sklearn.multioutput import MultiOutputRegressor
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.neighbors import KNeighborsRegressor
-from sklearn.neural_network import MLPRegressor
-from sklearn.ensemble.gradient_boosting import GradientBoostingRegressor
-from sklearn.linear_model import LinearRegression
-from sklearn import tree
-
-#rgr = MultiOutputRegressor(MLPRegressor(activation='logistic', early_stopping = True, validation_fraction = 0.2 ,solver='adam',hidden_layer_sizes=(300,300,300)))
-#rgr = MultiOutputRegressor(KNeighborsRegressor(n_neighbors=39, p = 1, weights='distance'))
-#rgr = MultiOutputRegressor(LinearRegression(fit_intercept=True, normalize=False, copy_X=True, n_jobs=None))
-rgr = MultiOutputRegressor(tree.DecisionTreeRegressor(criterion = "mse", max_depth = 1))
-
-
-rgr.fit(X_train, y_train)
-
-y_pred = rgr.predict(X_test)
-
-rgr.score(X_train,y_train)
-
-from sklearn.metrics import r2_score, mean_absolute_error
-
-r2_score(y_test,y_pred)
-
-mean_absolute_error(y_test, y_pred,multioutput='uniform_average')
-
-
-X_train = X_train.as_matrix()
-y_train = y_train.as_matrix()
-
-
-import keras
-from keras.models import Sequential 
-from keras.layers.core import Dense, Activation, Dropout, Flatten
-from keras.layers.recurrent import LSTM
-
-regressor = Sequential()
-regressor.add(LSTM(100))
-regressor.add(Flatten())
-regressor.add(Dense(5))
-regressor.compile(loss = "mean_absolute_error", optimizer = "adam")
-regressor.fit(X_train, y_train, epochs = 100, batch_size =1, verbose = 2)
 
 
 '''

@@ -32,10 +32,7 @@ dataset.drop(['used_app_before'],axis=1, inplace=True)
 #SUBSTITUINDO VALORES AUSENTES PELA MODA
 dataset['ethnicity'].fillna(dataset['ethnicity'].mode()[0],inplace=True)
 
-#APAGANDO RUIDO
-dataset.drop(dataset[dataset.age=='383'].index ,inplace=True)
-
-#APAGANDO LINHAS QUE POSSUEM INSTANCIAS AUSENTE
+#APAGANDO LINHAS QUE POSSUEM INSTANCIAS AUSENTES
 dataset.drop(62,inplace=True)
 dataset.drop(91,inplace=True)
 
@@ -69,7 +66,7 @@ hist_dataset = pd.Categorical(hist_dataset).codes
 sns.distplot(hist_dataset,kde=False,bins=3)
 
 
-#DISCRETIZAÇÃO DA DATABASE
+
 X = X_downsampled
 Y = X.iloc[:,14]
 X = X.drop(['austim'], axis = 1)
@@ -80,6 +77,7 @@ X['jundice'] = pd.Categorical(X['jundice']).codes
 X['contry_of_res'] = pd.Categorical(X['contry_of_res']).codes
 X['Class/ASD'] = pd.Categorical(X['Class/ASD']).codes
 
+correlacao=dataset.corr().abs().unstack().sort_values(kind='quicksort')
 
 #MAPA DE CALOR 'CORRELAÇÃO'
 X.corr()
@@ -100,13 +98,13 @@ X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.2, random_
 from sklearn.preprocessing import StandardScaler
 scaler = StandardScaler()  
 scaler.fit(X_train)
-
+#DISCRETIZAÇÃO DA DATABASE
 X_train = scaler.transform(X_train)  
 X_test = scaler.transform(X_test)  
 
 from sklearn.neighbors import KNeighborsClassifier 
  
-classifier = KNeighborsClassifier(n_neighbors=1)  
+classifier = KNeighborsClassifier(n_neighbors=5,metric='chebyshev')  
 
 classifier.fit(X_train, y_train)  
 
@@ -139,7 +137,7 @@ print('Especificidade:',especificidade)
 print('=================SVM=================')
 from sklearn import svm
 
-classifier_SVM = svm.SVC(kernel='poly',C=3.0, degree = 6,coef0=0.0)  
+classifier_SVM = svm.SVC(kernel='sigmoid',C=1.0, coef0=0.0)  
 
 classifier_SVM.fit(X_train, y_train)  
 

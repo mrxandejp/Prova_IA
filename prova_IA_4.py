@@ -88,7 +88,7 @@ from sklearn.cluster import KMeans
 #init = k-means++ / random / 1ª favorece a convergencia 2º randomico
 #max_iter = quantidade maxima de iteracoes
 
-kmeans = KMeans(n_clusters = 50, init = 'k-means++', max_iter=300)
+kmeans = KMeans(n_clusters = 20, init = 'k-means++', max_iter=300)
 
 
 #Ajustando
@@ -102,9 +102,9 @@ table_finale_kmeans = X
 
 table_finale_kmeans=pd.DataFrame(table_finale_kmeans)
 
-table_finale_kmeans['clusters'] = clusters_kmeans
+table_finale_kmeans['clusters_kmeans'] = clusters_kmeans
 
-qtd_por_clusters_kmeans=table_finale_kmeans['clusters'].value_counts()
+qtd_por_clusters_kmeans=table_finale_kmeans['clusters_kmeans'].value_counts()
 
 qtd_por_clusters_kmeans.sum()
 
@@ -125,7 +125,7 @@ import collections
 Z = linkage(X,'ward','euclidean')
 
 #criação de  
-clusters_H = cluster.hierarchy.cut_tree(Z, n_clusters=50)
+clusters_H = cluster.hierarchy.cut_tree(Z, n_clusters=10)
 
 
 
@@ -133,9 +133,9 @@ table_finale_H = X
 
 table_finale_H = pd.DataFrame(table_finale_H)
 
-table_finale_H['clusters'] = clusters_H
+table_finale_H['clusters_hierarquico'] = clusters_H
 
-qtd_por_clusters_hier=table_finale_H['clusters'].value_counts()
+qtd_por_clusters_hier=table_finale_H['clusters_hierarquico'].value_counts()
 
 qtd_por_clusters_hier.sum()
 
@@ -164,6 +164,11 @@ sns.distplot(hist_clusters_hier)
 
 
 ###############################################################################
+
+compara = pd.DataFrame(qtd_por_clusters_kmeans)
+
+compara['clusters_hierarquico']= qtd_por_clusters_hier
+
 
 #qtd_por_clusters_hier['id']=qtd_por_clusters_hier.index + 1
 qtd_por_clusters_hier.to_csv('NO_NORM_new_csv4.txt',sep='\t')
