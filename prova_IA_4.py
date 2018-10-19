@@ -65,7 +65,7 @@
     print(correlacao)
     
     X = dataset.iloc[:,0:] 
-
+'''
 #NORMALIZAÇÃO
 from sklearn.preprocessing import MinMaxScaler
 
@@ -74,7 +74,7 @@ scaler.fit(X)
 MinMaxScaler(copy=True, feature_range=(0, 1))
 
 X=scaler.transform(X)
-
+'''
 
 ###############################################################################
 #                                                                             #       
@@ -88,7 +88,7 @@ from sklearn.cluster import KMeans
 #init = k-means++ / random / 1ª favorece a convergencia 2º randomico
 #max_iter = quantidade maxima de iteracoes
 
-kmeans = KMeans(n_clusters = 20, init = 'k-means++', max_iter=300)
+kmeans = KMeans(n_clusters = 100, init = 'k-means++')
 
 
 #Ajustando
@@ -122,12 +122,11 @@ from scipy import cluster
 import numpy as np , collections
 import collections
 
+
+#parametro linkage
 Z = linkage(X,'ward','euclidean')
-
-#criação de  
-clusters_H = cluster.hierarchy.cut_tree(Z, n_clusters=10)
-
-
+#geração dos clusters
+clusters_H = cluster.hierarchy.cut_tree(Z, n_clusters=100)
 
 table_finale_H = X
 
@@ -144,7 +143,7 @@ qtd_por_clusters_hier.sum()
 #                               #GRÁFICOS#                                    # 
 #                                                                             #           
 ###############################################################################
-
+'''
 
 #HISTOGRAM COORDENADA Y
 hist_clusters_kmeans = qtd_por_clusters_kmeans
@@ -160,7 +159,7 @@ hist_clusters_hier = qtd_por_clusters_hier
 hist_clusters_hier = pd.Categorical(hist_clusters_hier).codes
 
 sns.distplot(hist_clusters_hier)
-
+'''
 
 
 ###############################################################################
@@ -169,10 +168,10 @@ compara = pd.DataFrame(qtd_por_clusters_kmeans)
 
 compara['clusters_hierarquico']= qtd_por_clusters_hier
 
-
+'''
 #qtd_por_clusters_hier['id']=qtd_por_clusters_hier.index + 1
 qtd_por_clusters_hier.to_csv('NO_NORM_new_csv4.txt',sep='\t')
-
+'''
 
 
 
