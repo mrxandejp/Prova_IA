@@ -20,6 +20,9 @@ from sklearn import tree
 from sklearn.metrics import r2_score, mean_absolute_error
 from math import sqrt, pow
 from sklearn.neural_network import MLPRegressor
+from sklearn.linear_model import LinearRegression
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.ensemble import RandomForestRegressor
 
 #IMPORTANDO DATABASE
 
@@ -57,6 +60,7 @@ X_test.reset_index(drop=True, inplace=True)
 X_test['Cx']=y_test['Coordenada X']
 X_test['Cy']=y_test['Coordenada Y']
 
+y_test = y_test.as_matrix()
 
 #correlação
 correlacao=X_train.corr().abs().unstack().sort_values(kind='quicksort')
@@ -84,40 +88,31 @@ scaler.fit(X_test)
 #X_test = scaler.transform(X_test)  
 
 
-'''
-#KNN
-from sklearn.neighbors import KNeighborsRegressor
 
-neigh = KNeighborsRegressor(n_neighbors=5,algorithm='auto',weights='distance',p=2)
+#FLORESTA ALEATÓRIA
+hipotenusa_RANDOM=[]
 
-neigh.fit(X_train, y_train) 
-
-y_pred = neigh.predict(X_test)
+for x in range(0,20):
  
-mean_absolute_error(y_test, y_pred)
+    neigh = RandomForestRegressor(random_state=x)
+    
+    neigh.fit(X_train, y_train) 
+    
+    y_pred = neigh.predict(X_test)
+     
+    mean_absolute_error(y_test, y_pred)
+  
+    
+    hipotenusa_RANDOM.append(0)
+        
+    for i in range(len(y_pred)-1):
+        hipotenusa_RANDOM[x] +=  sqrt( pow( (y_pred[i][0]-y_test[i][0]) ,2) + pow( (y_pred[i][1]-y_test[i][1]) ,2))
+    
+    
+    hipotenusa_RANDOM[x] = hipotenusa_RANDOM[x]/len(y_pred) 
 
-#y_test = y_test.as_matrix()
-
-hipotenusa_KNN = 0
-
-for i in range(len(y_pred)-1):
-    hipotenusa_KNN +=  sqrt( pow( (y_pred[i][0]-y_test[i][0]) ,2) + pow( (y_pred[i][1]-y_test[i][1]) ,2))
-
-
-hipotenusa_KNN = hipotenusa_KNN/len(y_pred) 
 '''
-
-
-
-
-y_test = y_test.as_matrix()
-
-
-
-
 #REDE NEURAL OK
-
-
 clf = MLPRegressor(activation='relu',solver='lbfgs',hidden_layer_sizes=(25,25),random_state = 3)
                
 clf.fit(X_train, y_train)
@@ -134,9 +129,11 @@ for i in range(len(y_pred)-1):
 
 
 hipotenusa = hipotenusa/len(y_pred) 
-
-
 '''
+
+
+
+#REDE NEURAL OK
 hipotenusa=[]
 
 for x in range(0,20):
@@ -155,71 +152,6 @@ for x in range(0,20):
 
 
     hipotenusa[x] = hipotenusa[x]/len(y_pred) 
-    
-
-'''
-
-
-'''
-
-X_train1 = pd.DataFrame(X_train)
-
-X_train1['Cx']=pd.DataFrame(y_pred_train[:,0])
-X_train1['Cy']=pd.DataFrame(y_pred_train[:,1])
-
-
-X_test1 = pd.DataFrame(X_test)
-
-X_test1['Cx']=pd.DataFrame(y_pred[:,0])
-X_test1['Cy']=pd.DataFrame(y_pred[:,1])
-
-
-clf.fit(X_train1, y_train)
-
-y_pred1=clf.predict(X_test)
-
-mean_absolute_error(y_test , y_pred1)
-'''
-
-''''
-from keras import Sequential
-
-embed_dim = 128
-lstm_out = 200
-batch_size = 32
-
-model = Sequential()
-model.add(Embedding(2500, embed_dim,input_length = X.shape[1], dropout = 0.2))
-model.add(LSTM(lstm_out, dropout_U = 0.2, dropout_W = 0.2))
-model.add(Dense(2,activation='softmax'))
-model.compile(loss = 'categorical_crossentropy', optimizer='adam',metrics = ['accuracy'])
-print(model.summary())
-
-
-'''
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
