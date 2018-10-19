@@ -9,6 +9,7 @@
     import pandas as pd
     import seaborn as sns
     dataset = pd.read_csv("csv_result-Genes_Atividade_IA.csv")
+      
     
     dataset.drop(['id'],axis=1, inplace=True)
     dataset.drop(['class'],axis=1, inplace=True)
@@ -65,7 +66,8 @@
     print(correlacao)
     
     X = dataset.iloc[:,0:] 
-'''
+
+  
 #NORMALIZAÇÃO
 from sklearn.preprocessing import MinMaxScaler
 
@@ -74,7 +76,7 @@ scaler.fit(X)
 MinMaxScaler(copy=True, feature_range=(0, 1))
 
 X=scaler.transform(X)
-'''
+
 
 ###############################################################################
 #                                                                             #       
@@ -160,6 +162,8 @@ hist_clusters_hier = pd.Categorical(hist_clusters_hier).codes
 
 sns.distplot(hist_clusters_hier)
 '''
+
+
 
 
 ###############################################################################
